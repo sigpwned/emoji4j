@@ -1,0 +1,45 @@
+# DerivedName-14.0.0.txt
+# Date: 2021-07-10, 00:35:09 GMT
+# © 2021 Unicode®, Inc.
+# Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
+# For terms of use, see http://www.unicode.org/terms_of_use.html
+#
+# Unicode Character Database
+#   For documentation, see http://www.unicode.org/reports/tr44/
+#
+# This file lists the values of the Name property.
+# This property is specified by the derivation documented in
+# Section 4.8 of the Unicode Standard, Version 13.0,
+# based on the Name field in UnicodeData.txt,
+# the Jamo_Short_Name property in Jamo.txt,
+# and a specified list of pattern strings used to derive names
+# for certain ranges of characters from their code points.
+# This file provides a full listing of the derived values
+# so that implementations do not have to properly
+# code that derivation.
+#
+# The format is two fields separated by a semicolon.
+# Field 0: Unicode code point value or range of code point values
+# Field 1: Name property value or pattern.
+#
+# • Values containing a * character are patterns which
+#   use the placeholder * in place of the code point in hex.
+#   In such cases, the name property value for any code point in Field 0
+#   is formed by replacing the '*' with that code point value
+#   in the usual 4- to 6-digit hexadecimal format.
+#
+#   UAX #42 and its data files use a similar convention,
+#   except that the metacharacter there is '#'.
+#
+#   For example, the Name property value of U+4E12,
+#   generated from the pattern string "CJK UNIFIED IDEOGRAPH-*",
+#   is CJK UNIFIED IDEOGRAPH-4E12.
+#   Similarly, the Name property value of U+2F89F,
+#   generated from the pattern string "CJK COMPATIBILITY IDEOGRAPH-*",
+#   is CJK COMPATIBILITY IDEOGRAPH-2F89F.
+#
+0020          ; SPACE
+
+# Total code points: 144697
+
+# EOF
