@@ -11,6 +11,26 @@
     <name>emojis4j-core</name>
     <packaging>jar</packaging>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.sigpwned</groupId>
+                <artifactId>emojis4j-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <!-- Compile all code  except module-info.java with the configured source level -->
+                    <execution>
+                        <id>default-generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>

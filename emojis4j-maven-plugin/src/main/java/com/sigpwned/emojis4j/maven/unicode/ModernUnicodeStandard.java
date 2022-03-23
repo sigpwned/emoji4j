@@ -9,6 +9,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import com.sigpwned.emojis4j.maven.CodePoint;
 import com.sigpwned.emojis4j.maven.CodePointCollection;
+import com.sigpwned.emojis4j.maven.CodePointRange;
 import com.sigpwned.emojis4j.maven.CodePointSequence;
 import com.sigpwned.emojis4j.maven.DataLine;
 import com.sigpwned.emojis4j.maven.UnicodeStandard;
@@ -81,6 +82,27 @@ public class ModernUnicodeStandard implements UnicodeStandard {
     }
   }
 
+  /* default */ URL getEmojiTestUrl() {
+    try {
+      return new URL(DEFAULT_BASE_URL,
+          String.format("emoji/%s/emoji-test.txt", getVersion().toMajorMinorString()));
+    } catch (MalformedURLException e) {
+      throw new UncheckedIOException("Failed to parse emoji test URL", e);
+    }
+  }
+
+  @Override
+  public void processEmojiTest(EmojiTestHandler handler) throws IOException {
+    try (BufferedReader lines = new BufferedReader(
+        new InputStreamReader(getEmojiZwjSequenceUrl().openStream(), StandardCharsets.UTF_8))) {
+      lines.lines().map(DataLine::fromString).filter(dl -> !dl.isBlank()).forEach(dl -> {
+        CodePointSequence codePoints = CodePointSequence.fromString(dl.getField(0));
+        String status = dl.getField(1);
+        handler.sequence(codePoints, status);
+      });
+    }
+  }
+
   /* default */ URL getUnicodeDataUrl() {
     try {
       return new URL(DEFAULT_BASE_URL,
@@ -98,6 +120,50 @@ public class ModernUnicodeStandard implements UnicodeStandard {
         CodePoint codePoint = CodePoint.fromString(dl.getField(0));
         String shortName = dl.getField(1);
         handler.codePoint(codePoint, shortName);
+      });
+    }
+  }
+
+  /* default */ URL getEmojiDataUrl() {
+    try {
+      return new URL(DEFAULT_BASE_URL,
+          String.format("%s/ucd/emoji/emoji-data.txt", getVersion().toMajorMinorPatchString()));
+    } catch (MalformedURLException e) {
+      throw new UncheckedIOException("Failed to parse emoji data sequence URL", e);
+    }
+  }
+
+  @Override
+  public void processEmojiData(EmojiDataHandler handler) throws IOException {
+    try (BufferedReader lines = new BufferedReader(
+        new InputStreamReader(getEmojiDataUrl().openStream(), StandardCharsets.UTF_8))) {
+      lines.lines().map(DataLine::fromString).filter(dl -> !dl.isBlank()).forEach(dl -> {
+        CodePointRange codePoints = CodePointRange.fromString(dl.getField(0));
+        String property = dl.getField(1);
+        handler.sequence(codePoints, property);
+      });
+    }
+  }
+
+  /* default */ URL getEmojiVariationSequencesUrl() {
+    try {
+      return new URL(DEFAULT_BASE_URL, String.format("%s/ucd/emoji/emoji-variation-sequences.txt",
+          getVersion().toMajorMinorPatchString()));
+    } catch (MalformedURLException e) {
+      throw new UncheckedIOException("Failed to parse emoji data sequence URL", e);
+    }
+  }
+
+  @Override
+  public void processEmojiVariationSequences(EmojiVariationSequenceHandler handler)
+      throws IOException {
+    try (BufferedReader lines =
+        new BufferedReader(new InputStreamReader(getEmojiVariationSequencesUrl().openStream(),
+            StandardCharsets.UTF_8))) {
+      lines.lines().map(DataLine::fromString).filter(dl -> !dl.isBlank()).forEach(dl -> {
+        CodePointSequence codePoints = CodePointSequence.fromString(dl.getField(0));
+        String style = dl.getField(1);
+        handler.variation(codePoints, style);
       });
     }
   }

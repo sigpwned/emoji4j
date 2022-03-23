@@ -1,5 +1,7 @@
 package com.sigpwned.emojis4j.maven;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
@@ -23,6 +25,10 @@ public class CodePointSequence extends CodePointCollection implements Iterable<C
     return of(singletonList(element));
   }
 
+  public static CodePointSequence of(CodePoint first, CodePoint second) {
+    return of(asList(first, second));
+  }
+
   public static CodePointSequence of(List<CodePoint> elements) {
     return new CodePointSequence(elements);
   }
@@ -31,7 +37,7 @@ public class CodePointSequence extends CodePointCollection implements Iterable<C
 
   public CodePointSequence(List<CodePoint> elements) {
     if (elements.isEmpty())
-      throw new IllegalArgumentException("no elements");
+      throw new IllegalArgumentException("empty");
     this.elements = unmodifiableList(elements);
   }
 
@@ -73,6 +79,15 @@ public class CodePointSequence extends CodePointCollection implements Iterable<C
     return getElements().size();
   }
 
+  /**
+   * Converts from a fully-, minimally-, or un-qualified code point sequence to an unqualified code
+   * point sequence. This only involves removing variation qualifiers.
+   */
+  public CodePointSequence unqualified() {
+    return of(stream().filter(cp -> cp.getValue() != 0xFE0F && cp.getValue() != 0xFE0E)
+        .collect(toList()));
+  }
+
   public CodePointSequence plus(CodePoint cp) {
     return plus(CodePointSequence.of(cp));
   }
@@ -86,6 +101,10 @@ public class CodePointSequence extends CodePointCollection implements Iterable<C
 
   public int[] toArray() {
     return stream().mapToInt(CodePoint::getValue).toArray();
+  }
+
+  public boolean contains(CodePoint cp) {
+    return count(singleton(cp)) > 0;
   }
 
   /**

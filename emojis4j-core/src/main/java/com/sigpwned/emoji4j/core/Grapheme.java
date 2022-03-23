@@ -60,4 +60,9 @@ public class Grapheme {
     return Arrays.equals(coordinates, other.coordinates) && Objects.equals(name, other.name)
         && type == other.type;
   }
+
+  @Override
+  public String toString() {
+    return new String(coordinates, 0, coordinates.length);
+  }
 }
