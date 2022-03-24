@@ -14,7 +14,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class CodePointSequence extends CodePointCollection implements Iterable<CodePoint> {
+public class CodePointSequence extends CodePointCollection
+    implements Comparable<CodePointSequence> {
   private static final Pattern SPACE = Pattern.compile(" ");
 
   public static CodePointSequence fromString(String s) {
@@ -78,6 +79,10 @@ public class CodePointSequence extends CodePointCollection implements Iterable<C
   public int size() {
     return getElements().size();
   }
+  
+  public boolean isQualified() {
+    return !unqualified().equals(this);
+  }
 
   /**
    * Converts from a fully-, minimally-, or un-qualified code point sequence to an unqualified code
@@ -139,5 +144,21 @@ public class CodePointSequence extends CodePointCollection implements Iterable<C
   @Override
   public Iterator<CodePoint> iterator() {
     return getElements().iterator();
+  }
+
+  @Override
+  public int compareTo(CodePointSequence o) {
+    Iterator<CodePoint> itera = iterator();
+    Iterator<CodePoint> iterb = o.iterator();
+    while (itera.hasNext() && iterb.hasNext()) {
+      int comparison = itera.next().compareTo(iterb.next());
+      if (comparison != 0)
+        return comparison;
+    }
+    if(itera.hasNext() && !iterb.hasNext())
+      return -1;
+    if(!itera.hasNext() && iterb.hasNext())
+      return +1;
+    return 0;
   }
 }

@@ -94,7 +94,7 @@ public class ModernUnicodeStandard implements UnicodeStandard {
   @Override
   public void processEmojiTest(EmojiTestHandler handler) throws IOException {
     try (BufferedReader lines = new BufferedReader(
-        new InputStreamReader(getEmojiZwjSequenceUrl().openStream(), StandardCharsets.UTF_8))) {
+        new InputStreamReader(getEmojiTestUrl().openStream(), StandardCharsets.UTF_8))) {
       lines.lines().map(DataLine::fromString).filter(dl -> !dl.isBlank()).forEach(dl -> {
         CodePointSequence codePoints = CodePointSequence.fromString(dl.getField(0));
         String status = dl.getField(1);

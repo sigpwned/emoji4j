@@ -6,11 +6,20 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 
 public class GraphemeTrie {
-  public final NavigableMap<CodePoint, GraphemeTrie> children;
-  public GraphemeBuilder grapheme;
+  private final NavigableMap<CodePoint, GraphemeTrie> children;
+  private final CodePointSequence codePoints;
+  private GraphemeBuilder grapheme;
 
+  /**
+   * Root only
+   */
   public GraphemeTrie() {
+    this(null);
+  }
+
+  public GraphemeTrie(CodePointSequence codePoints) {
     this.children = new TreeMap<>();
+    this.codePoints = codePoints;
   }
 
   public void put(CodePointSequence cps, GraphemeBuilder grapheme) {
@@ -19,8 +28,11 @@ public class GraphemeTrie {
       GraphemeTrie child;
       if (node.children.containsKey(cp))
         child = node.children.get(cp);
-      else
-        node.children.put(cp, child = new GraphemeTrie());
+      else {
+        node.children.put(cp,
+            child = new GraphemeTrie(node.getCodePoints() != null ? node.getCodePoints().plus(cp)
+                : CodePointSequence.of(cp)));
+      }
 
       node = child;
     }
@@ -46,6 +58,13 @@ public class GraphemeTrie {
   }
 
   /**
+   * @return the codePoints
+   */
+  public CodePointSequence getCodePoints() {
+    return codePoints;
+  }
+
+  /**
    * @param grapheme the grapheme to set
    */
   public void setGrapheme(GraphemeBuilder grapheme) {
@@ -56,5 +75,4 @@ public class GraphemeTrie {
     setGrapheme(grapheme);
     return this;
   }
-
 }

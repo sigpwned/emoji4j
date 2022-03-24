@@ -1,16 +1,21 @@
 package com.sigpwned.emojis4j.maven;
 
-import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class GraphemeBuilder {
-  public static final String EMOJI = "Emoji";
+  public static final String EMOJI = "emoji";
 
-  public static final String PICTOGRAPHIC = "Pictographic";
+  public static final String PICTOGRAPHIC = "pictographic";
 
   private String type;
   private String shortName;
+  private CodePointSequence canonicalCodePointSequence;
+  private Set<CodePointSequence> alternativeCodePointSequences;
 
-  public GraphemeBuilder() {}
+  public GraphemeBuilder() {
+    this.alternativeCodePointSequences = new TreeSet<>();
+  }
 
   /**
    * @return the type
@@ -50,26 +55,40 @@ public class GraphemeBuilder {
     return this;
   }
 
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(shortName, type);
+  /**
+   * @return the canonicalCodePointSequence
+   */
+  public CodePointSequence getCanonicalCodePointSequence() {
+    return canonicalCodePointSequence;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    GraphemeBuilder other = (GraphemeBuilder) obj;
-    return Objects.equals(shortName, other.shortName) && Objects.equals(type, other.type);
+  /**
+   * @param canonicalCodePointSequence the canonicalCodePointSequence to set
+   */
+  public void setCanonicalCodePointSequence(CodePointSequence canonicalCodePointSequence) {
+    this.canonicalCodePointSequence = canonicalCodePointSequence;
   }
 
-  @Override
-  public String toString() {
-    return "GraphemeBuilder [type=" + type + ", shortName=" + shortName + "]";
+  public GraphemeBuilder withCanonicalCodePointSequence(
+      CodePointSequence canonicalCodePointSequence) {
+    setCanonicalCodePointSequence(canonicalCodePointSequence);
+    return this;
+  }
+
+  /**
+   * @return the alternativeCodePointSequences
+   */
+  public Set<CodePointSequence> getAlternativeCodePointSequences() {
+    return alternativeCodePointSequences;
+  }
+
+  public void addAlternativeCodePointSequence(CodePointSequence alternativeCodePointSequence) {
+    alternativeCodePointSequences.add(alternativeCodePointSequence);
+  }
+
+  public GraphemeBuilder withAlternativeCodePointSequence(
+      CodePointSequence alternativeCodePointSequence) {
+    addAlternativeCodePointSequence(alternativeCodePointSequence);
+    return this;
   }
 }

@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import com.sigpwned.emojis4j.maven.CodePoint;
@@ -61,24 +60,23 @@ public final class CodeGeneration {
       out.printf("    private %s() {}\n", fileName);
       out.printf("\n");
       out.printf("    public static final GraphemeTrie ROOT = \n");
-      out.printf("        %s;\n", generateTrie(emptyList(), trie, referenceGenerator));
+      out.printf("        %s;\n", generateTrie(trie, referenceGenerator));
       out.printf("}");
     }
     return formatSource(result.toString());
   }
 
-  public static String generateTrie(List<CodePoint> cps, GraphemeTrie trie,
+  public static String generateTrie(GraphemeTrie trie,
       Function<GraphemeMapping, String> referenceGenerator) {
     if (trie.listChildren().isEmpty()) {
-      return format("new GraphemeTrie(%s)", referenceGenerator
-          .apply(GraphemeMapping.of(CodePointSequence.of(cps), trie.getGrapheme())));
+      return format("new GraphemeTrie(%s)",
+          referenceGenerator.apply(GraphemeMapping.of(trie.getCodePoints(), trie.getGrapheme())));
     } else if (trie.getGrapheme() == null) {
       return format("new GraphemeTrie(%s, %s)",
           intArray(trie.listChildren().stream().mapToInt(CodePoint::getValue).toArray()),
           format("new GraphemeTrie[] {%s}",
               trie.listChildren().stream()
-                  .flatMap(cp -> Stream.of(cp).map(cpi -> trie.getChild(cpi)).map(
-                      t -> CodeGeneration.generateTrie(append(cps, cp), t, referenceGenerator)))
+                  .map(cp -> CodeGeneration.generateTrie(trie.getChild(cp), referenceGenerator))
                   .collect(joining(", "))));
 
     } else {
@@ -86,11 +84,9 @@ public final class CodeGeneration {
           intArray(trie.listChildren().stream().mapToInt(CodePoint::getValue).toArray()),
           format("new GraphemeTrie[] {%s}",
               trie.listChildren().stream()
-                  .flatMap(cp -> Stream.of(cp).map(cpi -> trie.getChild(cpi)).map(
-                      t -> CodeGeneration.generateTrie(append(cps, cp), t, referenceGenerator)))
+                  .map(cp -> CodeGeneration.generateTrie(trie.getChild(cp), referenceGenerator))
                   .collect(joining(", "))),
-          referenceGenerator
-              .apply(GraphemeMapping.of(CodePointSequence.of(cps), trie.getGrapheme())));
+          referenceGenerator.apply(GraphemeMapping.of(trie.getCodePoints(), trie.getGrapheme())));
     }
   }
 
