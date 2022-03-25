@@ -32,8 +32,7 @@ public class ModernUnicodeStandard implements UnicodeStandard {
   /* default */ static final URL DEFAULT_BASE_URL;
   static {
     try {
-      // DEFAULT_BASE_URL = new URL("https://unicode.org/Public/");
-      DEFAULT_BASE_URL = new URL("file:///Users/aboothe/Downloads/unicode.org/Public/");
+      DEFAULT_BASE_URL = new URL("https://unicode.org/Public/");
     } catch (MalformedURLException e) {
       throw new UncheckedIOException("Failed to parse default Unicode URL", e);
     }
