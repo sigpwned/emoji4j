@@ -1,18 +1,17 @@
 package com.sigpwned.emojis4j.maven;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.maven.execution.MavenSession;
@@ -65,31 +64,15 @@ public class GenerateMojo extends AbstractMojo {
 
       session.getCurrentProject().addCompileSourceRoot(this.outputDirectory);
 
-      GraphemeCollection emojiSequences = generateEmojiSequences(unicode);
+      GraphemeCollection legacy = generateLegacyEmoji(unicode);
 
-      GraphemeCollection emojiZwjSequences = generateZwjEmojiSequences(unicode);
+      GraphemeCollection sequences = generateSequenceEmoji(unicode);
 
-      GraphemeCollection extendedPictographicSequences = generateExtendedPictographics(unicode);
+      List<GraphemeBuilder> graphemes =
+          legacy.merge(sequences).stream().map(m -> m.getGrapheme()).collect(toList());
 
-      GraphemeCollection test = generateEmojiTest(unicode, emojiSequences, emojiZwjSequences,
-          extendedPictographicSequences);
-      for (GraphemeMapping m : test)
-        if (!m.getCodePoints().equals(m.getGrapheme().getCanonicalCodePointSequence()))
-          m.getGrapheme().addAlternativeCodePointSequence(m.getCodePoints());
-
-      GraphemeCollection variations =
-          generateEmojiVariationSequences(unicode, emojiSequences, extendedPictographicSequences);
-      for (GraphemeMapping m : variations)
-        if (!m.getCodePoints().equals(m.getGrapheme().getCanonicalCodePointSequence()))
-          m.getGrapheme().addAlternativeCodePointSequence(m.getCodePoints());
-
-      List<GraphemeBuilder> graphemes = new ArrayList<>();
-      emojiSequences.stream().map(GraphemeMapping::getGrapheme).forEach(graphemes::add);
-      emojiZwjSequences.stream().map(GraphemeMapping::getGrapheme).forEach(graphemes::add);
-      extendedPictographicSequences.stream().map(GraphemeMapping::getGrapheme)
-          .forEach(graphemes::add);
-      graphemes.sort(Comparator.comparing(GraphemeBuilder::getType)
-          .thenComparing(GraphemeBuilder::getCanonicalCodePointSequence));
+      // List<GraphemeBuilder> graphemes =
+      // sequences.stream().map(m -> m.getGrapheme()).collect(toList());
 
       try (FileWriter fw =
           new FileWriter(new File(outputDirectory, "emoji.json"), StandardCharsets.UTF_8)) {
@@ -117,30 +100,163 @@ public class GenerateMojo extends AbstractMojo {
         }
         w.endArray().endObject();
       }
-
-      // GraphemeTrie trie = new GraphemeTrie();
-      // for (GraphemeMapping m : emojiSequences)
-      // trie.put(m.getCodePoints(), m.getGrapheme());
-      // for (GraphemeMapping m : emojiZwjSequences)
-      // trie.put(m.getCodePoints(), m.getGrapheme());
-      // for (GraphemeMapping m : test)
-      // trie.put(m.getCodePoints(), m.getGrapheme());
-
-      // g.generateTrieFile("EmojiTrie", trie);
-
-      // GraphemeCollection pictographics = generateExtendedPictographics(unicode);
-      //
-      // Files.writeString(new File(packageDirectory, PICTOGRAPHICS_JAVA).toPath(),
-      // CodeGeneration.generateGraphemeFile(outputPackage, PICTOGRAPHICS, pictographics));
-      //
-      // GraphemeCollection variationSequences = generateEmojiVariationSequences(unicode);
-      //
-      // Files.writeString(new File(packageDirectory, VARIATION_SEQUENCES_JAVA).toPath(),
-      // CodeGeneration.generateGraphemeFile(outputPackage, VARIATION_SEQUENCES,
-      // variationSequences));
     } catch (IOException e) {
       throw new MojoFailureException("Failed to read unicode data", e);
     }
+  }
+
+  /**
+   * Generates "legacy" emoji from within the relevant Unicode standard. These are single-code point
+   * and variation sequence emoji.
+   */
+  private GraphemeCollection generateLegacyEmoji(UnicodeStandard unicode) throws IOException {
+    Set<CodePointSequence> emojiPresentations = new HashSet<>();
+    Set<CodePointSequence> emojiComponents = new HashSet<>();
+    Set<CodePointSequence> pictographicPresentations = new HashSet<>();
+    unicode.processEmojiData((cps, property) -> {
+      switch (property) {
+        case "Emoji_Presentation":
+          for (CodePoint cp : cps)
+            emojiPresentations.add(CodePointSequence.of(cp));
+          break;
+        case "Emoji_Component":
+          for (CodePoint cp : cps)
+            emojiComponents.add(CodePointSequence.of(cp));
+          break;
+        case "Extended_Pictographic":
+          for (CodePoint cp : cps)
+            pictographicPresentations.add(CodePointSequence.of(cp));
+          break;
+        default:
+          // I don't care.
+          break;
+      }
+    });
+
+    Map<CodePointSequence, GraphemeBuilder> result = new LinkedHashMap<>();
+    unicode.processEmojiData((cps, property) -> {
+      switch (property) {
+        case "Emoji_Presentation":
+          for (CodePoint cp : cps)
+            if (!emojiComponents.contains(CodePointSequence.of(cp)))
+              result.put(CodePointSequence.of(cp),
+                  new GraphemeBuilder().withType(GraphemeBuilder.EMOJI)
+                      .withCanonicalCodePointSequence(CodePointSequence.of(cp)));
+          break;
+        case "Extended_Pictographic":
+          for (CodePoint cp : cps)
+            if (!emojiPresentations.contains(CodePointSequence.of(cp)))
+              result.put(CodePointSequence.of(cp),
+                  new GraphemeBuilder().withType(GraphemeBuilder.PICTOGRAPHIC)
+                      .withCanonicalCodePointSequence(CodePointSequence.of(cp)));
+          break;
+        default:
+          // I don't care.
+          break;
+      }
+    });
+
+    unicode.processEmojiVariationSequences((cps, style) -> {
+      CodePointSequence unqualified = cps.unqualified();
+      GraphemeBuilder grapheme = result.get(unqualified);
+      if (grapheme != null) {
+        String type;
+        switch (cps.getLast().getValue()) {
+          case EMOJI_VARIATION_MARKER:
+            type = GraphemeBuilder.EMOJI;
+            break;
+          case TEXT_VARIATION_MARKER:
+            type = GraphemeBuilder.PICTOGRAPHIC;
+            break;
+          default:
+            System.err.println("Ignoring unrecognized variation marker " + cps.getLast());
+            type = null;
+            break;
+        }
+
+        if (type == null) {
+          // I have no idea what this is.
+        } else if (grapheme.getType().equals(type)) {
+          grapheme.addAlternativeCodePointSequence(cps);
+        } else {
+          result.put(cps, new GraphemeBuilder().withType(type).withCanonicalCodePointSequence(cps));
+        }
+      }
+    });
+
+    // Fill in the names
+    unicode.processUnicodeData((cp, name) -> {
+      for (CodePointSequence cps : new CodePointSequence[] {CodePointSequence.of(cp),
+          CodePointSequence.of(cp, CodePoint.of(0xFE0E)),
+          CodePointSequence.of(cp, CodePoint.of(0xFE0F))}) {
+        Optional.ofNullable(result.get(cps)).ifPresent(g -> {
+          g.setShortName(name);
+        });
+      }
+    });
+
+    // There are some characters that emoji-data.txt contains and calls pictographs that are not
+    // actually pictographs, e.g. 1F02C. Get rid of those.
+    Iterator<GraphemeBuilder> iterator = result.values().iterator();
+    while (iterator.hasNext()) {
+      if (iterator.next().getShortName() == null)
+        iterator.remove();
+    }
+
+    return GraphemeCollection.of(result);
+  }
+
+  private GraphemeCollection generateSequenceEmoji(UnicodeStandard unicode) throws IOException {
+    GraphemeCollection emojiSequences = generateEmojiSequences(unicode);
+
+    GraphemeCollection emojiZwjSequences = generateZwjEmojiSequences(unicode);
+
+    Map<CodePointSequence, GraphemeBuilder> unqualifieds = new HashMap<>();
+    for (GraphemeMapping m : emojiSequences)
+      if (!unqualifieds.containsKey(m.getCodePoints().unqualified()))
+        unqualifieds.put(m.getCodePoints().unqualified(), m.getGrapheme());
+    for (GraphemeMapping m : emojiZwjSequences)
+      if (!unqualifieds.containsKey(m.getCodePoints().unqualified()))
+        unqualifieds.put(m.getCodePoints().unqualified(), m.getGrapheme());
+
+    Map<CodePointSequence, GraphemeBuilder> result = new LinkedHashMap<>();
+    for (GraphemeMapping m : emojiSequences)
+      result.put(m.getCodePoints(), m.getGrapheme());
+    for (GraphemeMapping m : emojiZwjSequences)
+      result.put(m.getCodePoints(), m.getGrapheme());
+
+    unicode.processEmojiTest((cps, status) -> {
+      CodePointSequence unqualified = cps.unqualified();
+      GraphemeBuilder grapheme = unqualifieds.get(unqualified);
+      if (status.equals("unqualified") && cps.size() == 1) {
+        if (grapheme == null) {
+          // This is a pictographic. Add it.
+          result.put(cps, new GraphemeBuilder().withType(GraphemeBuilder.PICTOGRAPHIC)
+              .withCanonicalCodePointSequence(cps));
+        } else {
+          if (!grapheme.getType().equals(GraphemeBuilder.EMOJI))
+            throw new AssertionError(format("grapheme %s has type %s", cps, grapheme.getType()));
+          if (!grapheme.getAllCodePointSequences().contains(cps)
+              && !grapheme.getAllCodePointSequences().contains(cps.plus(CodePoint.of(0xFE0F))))
+            throw new AssertionError(
+                format("grapheme %s does not account for code point %s", grapheme, cps));
+        }
+      } else if (!grapheme.getAllCodePointSequences().contains(cps)) {
+        grapheme.addAlternativeCodePointSequence(cps);
+      }
+    });
+
+    unicode.processUnicodeData((cp, name) -> {
+      for (CodePointSequence cps : new CodePointSequence[] {CodePointSequence.of(cp),
+          CodePointSequence.of(cp, CodePoint.of(0xFE0E)),
+          CodePointSequence.of(cp, CodePoint.of(0xFE0F))}) {
+        Optional.ofNullable(result.get(cps)).ifPresent(g -> {
+          g.setShortName(name);
+        });
+      }
+    });
+
+    return GraphemeCollection.of(result);
   }
 
   private GraphemeCollection generateEmojiSequences(UnicodeStandard unicode) throws IOException {
@@ -203,115 +319,5 @@ public class GenerateMojo extends AbstractMojo {
     });
 
     return GraphemeCollection.of(emojiZwjSequences);
-  }
-
-  private GraphemeCollection generateEmojiTest(UnicodeStandard unicode,
-      GraphemeCollection emojiSequences, GraphemeCollection emojiZwjSequences,
-      GraphemeCollection extendedPictographics) throws IOException {
-    Map<CodePointSequence, GraphemeBuilder> unqualifieds = new HashMap<>();
-    for (GraphemeMapping m : extendedPictographics)
-      if (!unqualifieds.containsKey(m.getCodePoints().unqualified()))
-        unqualifieds.put(m.getCodePoints().unqualified(), m.getGrapheme());
-    for (GraphemeMapping m : emojiSequences)
-      if (!unqualifieds.containsKey(m.getCodePoints().unqualified()))
-        unqualifieds.put(m.getCodePoints().unqualified(), m.getGrapheme());
-    for (GraphemeMapping m : emojiZwjSequences)
-      if (!unqualifieds.containsKey(m.getCodePoints().unqualified()))
-        unqualifieds.put(m.getCodePoints().unqualified(), m.getGrapheme());
-
-    Map<CodePointSequence, GraphemeBuilder> test = new LinkedHashMap<>();
-    unicode.processEmojiTest((cps, status) -> {
-      CodePointSequence unqualified = cps.unqualified();
-      GraphemeBuilder grapheme = Optional.ofNullable(unqualifieds.get(unqualified)).orElseThrow(
-          () -> new AssertionError("Failed to resolve test code point sequence " + cps));
-      if (grapheme.getType().equals(GraphemeBuilder.EMOJI))
-        test.put(cps, grapheme);
-      else {
-        System.err.println("SKIP " + cps);
-      }
-    });
-
-    return GraphemeCollection.of(test);
-  }
-
-  private GraphemeCollection generateExtendedPictographics(UnicodeStandard unicode)
-      throws IOException {
-    // These code points are emoji presentation by default
-    Set<CodePoint> emojiPresentations = new HashSet<>();
-    unicode.processEmojiData((cps, property) -> {
-      if (property.equals("Emoji_Presentation"))
-        for (CodePoint cp : cps)
-          emojiPresentations.add(cp);
-    });
-
-    // Grab the code points that are pictographs and not emoji presentation by default
-    Map<CodePointSequence, GraphemeBuilder> pictographicSequences = new LinkedHashMap<>();
-    unicode.processEmojiData((cps, property) -> {
-      if (property.equals("Extended_Pictographic"))
-        for (CodePoint cp : cps) {
-          if (!emojiPresentations.contains(cp))
-            pictographicSequences.put(CodePointSequence.of(cp),
-                new GraphemeBuilder().withCanonicalCodePointSequence(CodePointSequence.of(cp))
-                    .withType(GraphemeBuilder.PICTOGRAPHIC));
-        }
-    });
-
-    // Backfill the correct short names for everyone
-    unicode.processUnicodeData((cp, shortName) -> {
-      Optional.ofNullable(pictographicSequences.get(CodePointSequence.of(cp))).ifPresent(e -> {
-        e.setShortName(shortName);
-      });
-    });
-
-    // Remove any code points without names. They are reserved for future use, and have no use
-    // today.
-    Iterator<Map.Entry<CodePointSequence, GraphemeBuilder>> iterator =
-        pictographicSequences.entrySet().iterator();
-    while (iterator.hasNext()) {
-      if (iterator.next().getValue().getShortName() == null)
-        iterator.remove();
-    }
-
-    return GraphemeCollection.of(pictographicSequences);
-  }
-
-  private GraphemeCollection generateEmojiVariationSequences(UnicodeStandard unicode,
-      GraphemeCollection emojiSequences, GraphemeCollection extendedPictographics)
-      throws IOException {
-    Map<CodePointSequence, GraphemeBuilder> unqualifieds = new HashMap<>();
-    for (GraphemeMapping m : emojiSequences)
-      if (!m.getCodePoints().isQualified())
-        unqualifieds.put(m.getCodePoints(), m.getGrapheme());
-    for (GraphemeMapping m : extendedPictographics)
-      if (!m.getCodePoints().isQualified())
-        unqualifieds.put(m.getCodePoints(), m.getGrapheme());
-
-    // Grab the code points that are pictographs and not emoji presentation by default
-    Map<CodePointSequence, GraphemeBuilder> variationSequences = new LinkedHashMap<>();
-    unicode.processEmojiVariationSequences((cps, style) -> {
-      CodePointSequence unqualified = cps.unqualified();
-      GraphemeBuilder grapheme = unqualifieds.get(unqualified);
-      if (grapheme != null) {
-        String type;
-        switch (cps.getLast().getValue()) {
-          case EMOJI_VARIATION_MARKER:
-            type = GraphemeBuilder.EMOJI;
-            break;
-          case TEXT_VARIATION_MARKER:
-            type = GraphemeBuilder.PICTOGRAPHIC;
-            break;
-          default:
-            System.err.println("Ignoring unrecognized variation marker " + cps.getLast());
-            type = null;
-            break;
-        }
-
-        if (Objects.equals(grapheme.getType(), type)) {
-          variationSequences.put(cps, grapheme);
-        }
-      }
-    });
-
-    return GraphemeCollection.of(variationSequences);
   }
 }
