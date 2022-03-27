@@ -1,11 +1,11 @@
 package com.sigpwned.emoji4j.core;
 
 public interface GraphemeMatchResult {
-  public int getStart();
+  public int start();
 
-  public int getEnd();
+  public int end();
 
-  public String getMatchedText();
+  public String group();
 
   public Grapheme getGrapheme();
 }

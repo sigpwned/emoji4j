@@ -81,7 +81,7 @@ public class GraphemeMatcher implements GraphemeMatchResult {
 
   public boolean matches() {
     if (find())
-      if (getStart() == 0 && getEnd() == length)
+      if (start() == 0 && end() == length)
         return true;
     matched = false;
     start = end = -1;
@@ -112,9 +112,9 @@ public class GraphemeMatcher implements GraphemeMatchResult {
 
     int start = 0;
     while (find()) {
-      result.append(getText().substring(start, getStart()));
+      result.append(getText().substring(start, start()));
       result.append(replacer.apply(this));
-      start = getEnd();
+      start = end();
       if (firstOnly)
         break;
     }
@@ -134,22 +134,22 @@ public class GraphemeMatcher implements GraphemeMatchResult {
   }
 
   @Override
-  public int getStart() {
+  public int start() {
     if (!isMatched())
       throw new IllegalStateException("not matched");
     return start;
   }
 
   @Override
-  public int getEnd() {
+  public int end() {
     if (!isMatched())
       throw new IllegalStateException("not matched");
     return end;
   }
 
   @Override
-  public String getMatchedText() {
-    return getText().substring(getStart(), getEnd());
+  public String group() {
+    return getText().substring(start(), end());
   }
 
   @Override
