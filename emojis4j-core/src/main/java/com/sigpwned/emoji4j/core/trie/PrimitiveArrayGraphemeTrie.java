@@ -48,6 +48,10 @@ public class PrimitiveArrayGraphemeTrie implements GraphemeTrie {
 
   @Override
   public PrimitiveArrayGraphemeTrie getChild(int codePoint) {
+    if (codePoints.length == 0)
+      return null;
+    if (codePoint < codePoints[0] || codePoint > codePoints[codePoints.length - 1])
+      return null;
     int searchResult = Arrays.binarySearch(codePoints, codePoint);
     if (searchResult < 0 || searchResult >= codePoints.length)
       return null;
