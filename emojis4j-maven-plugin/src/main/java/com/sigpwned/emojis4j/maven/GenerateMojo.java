@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -62,7 +63,10 @@ public class GenerateMojo extends AbstractMojo {
 
       outputDirectory.mkdirs();
 
-      session.getCurrentProject().addCompileSourceRoot(this.outputDirectory);
+      Resource resourceDirectory = new Resource();
+      resourceDirectory.setDirectory(outputDirectory.getAbsolutePath());
+
+      session.getCurrentProject().addResource(resourceDirectory);
 
       GraphemeCollection legacy = generateLegacyEmoji(unicode);
 
@@ -75,9 +79,9 @@ public class GenerateMojo extends AbstractMojo {
       // sequences.stream().map(m -> m.getGrapheme()).collect(toList());
 
       try (FileWriter fw =
-          new FileWriter(new File(outputDirectory, "emoji.json"), StandardCharsets.UTF_8)) {
+          new FileWriter(new File(outputDirectory, "graphemes.json"), StandardCharsets.UTF_8)) {
         JSONWriter w = new JSONWriter(fw);
-        w.object().key("graphemes").array();
+        w.object().key("unicodeVersion").value(unicodeVersion).key("graphemes").array();
         for (GraphemeBuilder grapheme : graphemes) {
           w.object();
           w.key("type").value(grapheme.getType());

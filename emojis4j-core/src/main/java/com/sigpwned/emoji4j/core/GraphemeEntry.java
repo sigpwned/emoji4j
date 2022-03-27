@@ -4,17 +4,35 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class GraphemeEntry {
+  public static final String EMOJI_TYPE = "emoji";
+
+  public static final String PICTOGRAPHIC_TYPE = "pictographic";
+
+  public static GraphemeEntry of(String name, String type, int[] defaultCodePointSequence,
+      int[][] alternativeCodePointSequences) {
+    return new GraphemeEntry(name, type, defaultCodePointSequence, alternativeCodePointSequences);
+  }
+
   private final String name;
   private final String type;
-  private final int[] defaultCodePointSequence;
+  private final int[] canonicalCodePointSequence;
   private final int[][] alternativeCodePointSequences;
 
-  public GraphemeEntry(String name, String type, int[] defaultCodePointSequence,
+  public GraphemeEntry(String name, String type, int[] canonicalCodePointSequence,
       int[][] alternativeCodePointSequences) {
+    if (name == null)
+      throw new NullPointerException();
+    if (type == null)
+      throw new NullPointerException();
+    if (!type.equals(EMOJI_TYPE) && !type.equals(PICTOGRAPHIC_TYPE))
+      throw new IllegalArgumentException("unrecognized type " + type);
+    if (canonicalCodePointSequence == null)
+      throw new NullPointerException();
     this.name = name;
     this.type = type;
-    this.defaultCodePointSequence = defaultCodePointSequence;
-    this.alternativeCodePointSequences = alternativeCodePointSequences;
+    this.canonicalCodePointSequence = canonicalCodePointSequence;
+    this.alternativeCodePointSequences =
+        alternativeCodePointSequences != null ? alternativeCodePointSequences : new int[0][];
   }
 
   /**
@@ -34,8 +52,8 @@ public class GraphemeEntry {
   /**
    * @return the defaultCodePointSequence
    */
-  public int[] getDefaultCodePointSequence() {
-    return defaultCodePointSequence;
+  public int[] getCanonicalCodePointSequence() {
+    return canonicalCodePointSequence;
   }
 
   /**
@@ -50,7 +68,7 @@ public class GraphemeEntry {
     final int prime = 31;
     int result = 1;
     result = prime * result + Arrays.deepHashCode(alternativeCodePointSequences);
-    result = prime * result + Arrays.hashCode(defaultCodePointSequence);
+    result = prime * result + Arrays.hashCode(canonicalCodePointSequence);
     result = prime * result + Objects.hash(name, type);
     return result;
   }
@@ -65,14 +83,14 @@ public class GraphemeEntry {
       return false;
     GraphemeEntry other = (GraphemeEntry) obj;
     return Arrays.deepEquals(alternativeCodePointSequences, other.alternativeCodePointSequences)
-        && Arrays.equals(defaultCodePointSequence, other.defaultCodePointSequence)
+        && Arrays.equals(canonicalCodePointSequence, other.canonicalCodePointSequence)
         && Objects.equals(name, other.name) && Objects.equals(type, other.type);
   }
 
   @Override
   public String toString() {
     return "GraphemeEntry [name=" + name + ", type=" + type + ", defaultCodePointSequence="
-        + Arrays.toString(defaultCodePointSequence) + ", alternativeCodePointSequences="
+        + Arrays.toString(canonicalCodePointSequence) + ", alternativeCodePointSequences="
         + Arrays.toString(alternativeCodePointSequences) + "]";
   }
 }
