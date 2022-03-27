@@ -7,5 +7,5 @@ public interface GraphemeMatchResult {
 
   public String group();
 
-  public Grapheme getGrapheme();
+  public Grapheme grapheme();
 }

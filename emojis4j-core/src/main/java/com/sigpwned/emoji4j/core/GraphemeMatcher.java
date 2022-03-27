@@ -34,10 +34,10 @@ public class GraphemeMatcher implements GraphemeMatchResult {
 
     while (index < length) {
       // Is there a grapheme starting at offset?
-      int cp0 = getText().codePointAt(index);
+      int cp0 = text().codePointAt(index);
       int cc0 = Character.charCount(cp0);
 
-      GraphemeTrie t = getTrie().getChild(cp0);
+      GraphemeTrie t = trie().getChild(cp0);
       if (t != null) {
         int offset = cc0;
 
@@ -49,7 +49,7 @@ public class GraphemeMatcher implements GraphemeMatchResult {
         }
 
         while (index + offset < length) {
-          int cpi = getText().codePointAt(index + offset);
+          int cpi = text().codePointAt(index + offset);
 
           t = t.getChild(cpi);
           if (t == null)
@@ -67,8 +67,8 @@ public class GraphemeMatcher implements GraphemeMatchResult {
           }
         }
 
-        if (isMatched()) {
-          index = index + offset;
+        if (matched()) {
+          index = end;
           return true;
         }
       }
@@ -112,14 +112,14 @@ public class GraphemeMatcher implements GraphemeMatchResult {
 
     int start = 0;
     while (find()) {
-      result.append(getText().substring(start, start()));
+      result.append(text().substring(start, start()));
       result.append(replacer.apply(this));
       start = end();
       if (firstOnly)
         break;
     }
 
-    result.append(getText().substring(start, length));
+    result.append(text().substring(start, length));
 
     return result.toString();
 
@@ -135,45 +135,75 @@ public class GraphemeMatcher implements GraphemeMatchResult {
 
   @Override
   public int start() {
-    if (!isMatched())
+    if (!matched())
       throw new IllegalStateException("not matched");
     return start;
   }
 
   @Override
   public int end() {
-    if (!isMatched())
+    if (!matched())
       throw new IllegalStateException("not matched");
     return end;
   }
 
   @Override
   public String group() {
-    return getText().substring(start(), end());
+    return text().substring(start(), end());
   }
 
   @Override
-  public Grapheme getGrapheme() {
-    if (!isMatched())
+  public Grapheme grapheme() {
+    if (!matched())
       throw new IllegalStateException("not matched");
     return grapheme;
   }
 
-  private boolean isMatched() {
+  public GraphemeMatchResult toMatchResult() {
+    if (!matched())
+      throw new IllegalStateException("not matched");
+    final int start = start();
+    final int end = end();
+    final String group = group();
+    final Grapheme grapheme = grapheme();
+    return new GraphemeMatchResult() {
+      @Override
+      public int start() {
+        return start;
+      }
+
+      @Override
+      public int end() {
+        return end;
+      }
+
+      @Override
+      public String group() {
+        return group;
+      }
+
+      @Override
+      public Grapheme grapheme() {
+        return grapheme;
+      }
+    };
+  }
+
+  private boolean matched() {
     return matched;
   }
 
   /**
    * @return the trie
    */
-  private GraphemeTrie getTrie() {
+  private GraphemeTrie trie() {
     return trie;
   }
 
   /**
    * @return the text
    */
-  private String getText() {
+  private String text() {
     return text;
   }
 }

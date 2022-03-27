@@ -6,11 +6,10 @@ import java.io.UncheckedIOException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import com.sigpwned.emoji4j.core.GraphemeData;
-import com.sigpwned.emoji4j.core.GraphemeTrie;
 import com.sigpwned.emoji4j.core.trie.HashMapGraphemeTrie;
 
 public class Graphemes {
-  public static GraphemeData loadGraphemeData() {
+  public static GraphemeData getGraphemeData() {
     JSONObject o;
     try (InputStream in =
         Thread.currentThread().getContextClassLoader().getResourceAsStream("graphemes.json")) {
@@ -21,11 +20,11 @@ public class Graphemes {
     return Serialization.deserializeGraphemeData(o);
   }
 
-  private static GraphemeTrie defaultTrie;
+  private static HashMapGraphemeTrie defaultTrie;
 
-  public static synchronized GraphemeTrie getDefaultTrie() {
+  public static synchronized HashMapGraphemeTrie getDefaultTrie() {
     if (defaultTrie == null)
-      defaultTrie = HashMapGraphemeTrie.fromGraphemeData(loadGraphemeData());
+      defaultTrie = HashMapGraphemeTrie.fromGraphemeData(getGraphemeData());
     return defaultTrie;
   }
 
