@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import com.sigpwned.emoji4j.core.GraphemeData;
-import com.sigpwned.emoji4j.core.trie.HashMapGraphemeTrie;
+import com.sigpwned.emoji4j.core.data.GraphemeData;
+import com.sigpwned.emoji4j.core.trie.DefaultGraphemeTrie;
 
 public class Graphemes {
   public static GraphemeData getGraphemeData() {
@@ -20,11 +20,11 @@ public class Graphemes {
     return Serialization.deserializeGraphemeData(o);
   }
 
-  private static HashMapGraphemeTrie defaultTrie;
+  private static DefaultGraphemeTrie defaultTrie;
 
-  public static synchronized HashMapGraphemeTrie getDefaultTrie() {
+  public static synchronized DefaultGraphemeTrie getDefaultTrie() {
     if (defaultTrie == null)
-      defaultTrie = HashMapGraphemeTrie.fromGraphemeData(getGraphemeData());
+      defaultTrie = DefaultGraphemeTrie.fromGraphemeData(getGraphemeData());
     return defaultTrie;
   }
 

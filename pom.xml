@@ -90,6 +90,7 @@
 
     <modules>
         <module>emojis4j-core</module>
+        <module>emojis4j-benchmarks</module>
         <module>emojis4j-maven-plugin</module>
     </modules>
 

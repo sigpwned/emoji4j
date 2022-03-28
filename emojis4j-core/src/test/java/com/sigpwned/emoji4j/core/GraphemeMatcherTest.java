@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
+import com.sigpwned.emoji4j.core.data.GraphemeEntry;
 import com.sigpwned.emoji4j.core.util.Graphemes;
 
 public abstract class GraphemeMatcherTest {

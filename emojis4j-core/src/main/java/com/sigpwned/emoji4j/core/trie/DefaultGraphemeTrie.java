@@ -1,19 +1,16 @@
 package com.sigpwned.emoji4j.core.trie;
 
-import static java.util.Collections.unmodifiableSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import com.sigpwned.emoji4j.core.Grapheme;
-import com.sigpwned.emoji4j.core.GraphemeData;
-import com.sigpwned.emoji4j.core.GraphemeEntry;
 import com.sigpwned.emoji4j.core.GraphemeTrie;
+import com.sigpwned.emoji4j.core.data.GraphemeData;
+import com.sigpwned.emoji4j.core.data.GraphemeEntry;
 import com.sigpwned.emoji4j.core.grapheme.Emoji;
 import com.sigpwned.emoji4j.core.grapheme.Pictographic;
+import com.sigpwned.emoji4j.core.org.apache.commons.lang.IntHashMap;
 
-public class HashMapGraphemeTrie implements GraphemeTrie {
-  public static HashMapGraphemeTrie fromGraphemeData(GraphemeData gs) {
-    HashMapGraphemeTrie result = new HashMapGraphemeTrie();
+public class DefaultGraphemeTrie implements GraphemeTrie {
+  public static DefaultGraphemeTrie fromGraphemeData(GraphemeData gs) {
+    DefaultGraphemeTrie result = new DefaultGraphemeTrie();
     for (GraphemeEntry g : gs.getGraphemes()) {
       Grapheme grapheme;
       switch (g.getType()) {
@@ -34,31 +31,30 @@ public class HashMapGraphemeTrie implements GraphemeTrie {
     return result;
   }
 
-  private final Map<Integer, HashMapGraphemeTrie> children;
+  private final IntHashMap<DefaultGraphemeTrie> children;
   private Grapheme grapheme;
 
-  public HashMapGraphemeTrie() {
-    this.children = new HashMap<>();
+  public DefaultGraphemeTrie() {
+    this.children = new IntHashMap<>();
   }
 
   @Override
-  public HashMapGraphemeTrie getChild(int codePoint) {
+  public DefaultGraphemeTrie getChild(int codePoint) {
     return children.get(codePoint);
   }
 
   private void put(int[] codePointSequence, Grapheme grapheme) {
-    HashMapGraphemeTrie ti = this;
+    DefaultGraphemeTrie ti = this;
     for (int codePoint : codePointSequence)
       ti = ti.getOrCreateChild(codePoint);
     ti.setGrapheme(grapheme);
   }
 
-  private HashMapGraphemeTrie getOrCreateChild(int codePoint) {
-    return children.computeIfAbsent(codePoint, cp -> new HashMapGraphemeTrie());
-  }
-
-  public Set<Integer> listChildren() {
-    return unmodifiableSet(children.keySet());
+  private DefaultGraphemeTrie getOrCreateChild(int codePoint) {
+    DefaultGraphemeTrie result = children.get(codePoint);
+    if (result == null)
+      children.put(codePoint, result = new DefaultGraphemeTrie());
+    return result;
   }
 
   public int size() {
@@ -78,13 +74,5 @@ public class HashMapGraphemeTrie implements GraphemeTrie {
    */
   private void setGrapheme(Grapheme grapheme) {
     this.grapheme = grapheme;
-  }
-
-  @Override
-  public int getDepth() {
-    int maxChildDepth = 0;
-    for (HashMapGraphemeTrie child : children.values())
-      maxChildDepth = Math.max(maxChildDepth, child.getDepth());
-    return 1 + maxChildDepth;
   }
 }

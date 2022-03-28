@@ -1,4 +1,4 @@
-package com.sigpwned.emoji4j.core;
+package com.sigpwned.emoji4j.core.data;
 
 import static java.util.Collections.unmodifiableList;
 import java.util.List;

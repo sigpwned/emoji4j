@@ -1,4 +1,4 @@
-package com.sigpwned.emoji4j.core;
+package com.sigpwned.emoji4j.core.data;
 
 import java.util.Arrays;
 import java.util.Objects;
