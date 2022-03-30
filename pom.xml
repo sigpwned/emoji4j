@@ -54,6 +54,7 @@
 
         <sonar.organization>sigpwned</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.exclusions>**/org/json/**.java, **/org/apache/commons/lang/**.java, **/com/sigpwned/emoji4j/maven/**.java, **/com/sigpwned/emoji4j/benchmark/**.java</sonar.exclusions>
 
         <slf4j.version>1.7.36</slf4j.version>
         <junit.version>4.13.2</junit.version>

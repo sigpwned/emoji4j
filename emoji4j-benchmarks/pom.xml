@@ -38,9 +38,7 @@
     </build>
 
     <properties>
-        <jmh.version>1.34</jmh.version>
-        
-        <sonar.exclusions>*</sonar.exclusions>
+      <jmh.version>1.34</jmh.version>
     </properties>
 
     <dependencies>
