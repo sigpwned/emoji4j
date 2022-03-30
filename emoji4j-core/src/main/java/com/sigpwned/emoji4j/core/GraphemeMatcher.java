@@ -10,6 +10,8 @@ import com.sigpwned.emoji4j.core.util.Graphemes;
  * @see Matcher
  */
 public class GraphemeMatcher implements GraphemeMatchResult {
+  private static final String NOT_MATCHED = "not matched";
+  
   private final GraphemeTrie trie;
   private final String text;
   private int length;
@@ -86,9 +88,10 @@ public class GraphemeMatcher implements GraphemeMatchResult {
   }
 
   public boolean matches() {
-    if (find())
-      if (start() == 0 && end() == length)
-        return true;
+    if (find() == false)
+      return false;
+    if (start() == 0 && end() == length)
+      return true;
     matched = false;
     start = end = -1;
     grapheme = null;
@@ -116,16 +119,16 @@ public class GraphemeMatcher implements GraphemeMatchResult {
 
     StringBuilder result = new StringBuilder();
 
-    int start = 0;
+    int index = 0;
     while (find()) {
-      result.append(text().substring(start, start()));
+      result.append(text().substring(index, start()));
       result.append(replacer.apply(this));
-      start = end();
+      index = end();
       if (firstOnly)
         break;
     }
 
-    result.append(text().substring(start, length));
+    result.append(text().substring(index, length));
 
     return result.toString();
 
@@ -138,18 +141,18 @@ public class GraphemeMatcher implements GraphemeMatchResult {
     start = end = -1;
     grapheme = null;
   }
-
+  
   @Override
   public int start() {
     if (!matched())
-      throw new IllegalStateException("not matched");
+      throw new IllegalStateException(NOT_MATCHED);
     return start;
   }
 
   @Override
   public int end() {
     if (!matched())
-      throw new IllegalStateException("not matched");
+      throw new IllegalStateException(NOT_MATCHED);
     return end;
   }
 
@@ -161,36 +164,36 @@ public class GraphemeMatcher implements GraphemeMatchResult {
   @Override
   public Grapheme grapheme() {
     if (!matched())
-      throw new IllegalStateException("not matched");
+      throw new IllegalStateException(NOT_MATCHED);
     return grapheme;
   }
 
   public GraphemeMatchResult toMatchResult() {
     if (!matched())
-      throw new IllegalStateException("not matched");
-    final int start = start();
-    final int end = end();
-    final String group = group();
-    final Grapheme grapheme = grapheme();
+      throw new IllegalStateException(NOT_MATCHED);
+    final int thestart = start();
+    final int theend = end();
+    final String thegroup = group();
+    final Grapheme thegrapheme = grapheme();
     return new GraphemeMatchResult() {
       @Override
       public int start() {
-        return start;
+        return thestart;
       }
 
       @Override
       public int end() {
-        return end;
+        return theend;
       }
 
       @Override
       public String group() {
-        return group;
+        return thegroup;
       }
 
       @Override
       public Grapheme grapheme() {
-        return grapheme;
+        return thegrapheme;
       }
     };
   }

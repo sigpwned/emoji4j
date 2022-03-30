@@ -52,8 +52,10 @@ public class DefaultGraphemeTrie implements GraphemeTrie {
 
   private DefaultGraphemeTrie getOrCreateChild(int codePoint) {
     DefaultGraphemeTrie result = children.get(codePoint);
-    if (result == null)
-      children.put(codePoint, result = new DefaultGraphemeTrie());
+    if (result == null) {
+      result = new DefaultGraphemeTrie();
+      children.put(codePoint, result);
+    }
     return result;
   }
 

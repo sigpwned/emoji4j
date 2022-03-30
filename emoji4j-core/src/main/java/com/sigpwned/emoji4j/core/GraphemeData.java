@@ -3,6 +3,7 @@ package com.sigpwned.emoji4j.core;
 import static java.util.Collections.unmodifiableList;
 import java.util.List;
 import java.util.Objects;
+import com.sigpwned.emoji4j.core.annotation.Generated;
 import com.sigpwned.emoji4j.core.data.GraphemeEntry;
 
 public class GraphemeData {
@@ -33,11 +34,13 @@ public class GraphemeData {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     return Objects.hash(graphemes, unicodeVersion);
   }
 
   @Override
+  @Generated
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
@@ -51,6 +54,7 @@ public class GraphemeData {
   }
 
   @Override
+  @Generated
   public String toString() {
     return "GraphemeData [unicodeVersion=" + unicodeVersion + ", graphemes=" + graphemes + "]";
   }

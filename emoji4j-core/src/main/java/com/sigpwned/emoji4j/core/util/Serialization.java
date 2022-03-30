@@ -7,7 +7,9 @@ import com.sigpwned.emoji4j.core.data.GraphemeEntry;
 import com.sigpwned.emoji4j.core.org.json.JSONArray;
 import com.sigpwned.emoji4j.core.org.json.JSONObject;
 
-public class Serialization {
+public final class Serialization {
+  private Serialization() {}
+
   public static GraphemeData deserializeGraphemeData(JSONObject o) {
     String unicodeVersion = o.getString("unicodeVersion");
     List<GraphemeEntry> graphemes = deserializeGraphemeEntries(o.getJSONArray("graphemes"));

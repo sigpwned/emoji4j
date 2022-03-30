@@ -2,6 +2,7 @@ package com.sigpwned.emoji4j.core.data;
 
 import java.util.Arrays;
 import java.util.Objects;
+import com.sigpwned.emoji4j.core.annotation.Generated;
 
 public class GraphemeEntry {
   public static final String EMOJI_TYPE = "emoji";
@@ -64,6 +65,7 @@ public class GraphemeEntry {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     final int prime = 31;
     int result = 1;
@@ -74,6 +76,7 @@ public class GraphemeEntry {
   }
 
   @Override
+  @Generated
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
@@ -88,6 +91,7 @@ public class GraphemeEntry {
   }
 
   @Override
+  @Generated
   public String toString() {
     return "GraphemeEntry [name=" + name + ", type=" + type + ", defaultCodePointSequence="
         + Arrays.toString(canonicalCodePointSequence) + ", alternativeCodePointSequences="

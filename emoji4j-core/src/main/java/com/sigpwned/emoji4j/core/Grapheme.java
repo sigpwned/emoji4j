@@ -2,6 +2,7 @@ package com.sigpwned.emoji4j.core;
 
 import java.util.Arrays;
 import java.util.Objects;
+import com.sigpwned.emoji4j.core.annotation.Generated;
 
 /**
  * A model for a single, visually-distinct image character.
@@ -43,6 +44,7 @@ public class Grapheme {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     final int prime = 31;
     int result = 1;
@@ -52,6 +54,7 @@ public class Grapheme {
   }
 
   @Override
+  @Generated
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
@@ -65,6 +68,7 @@ public class Grapheme {
   }
 
   @Override
+  @Generated
   public String toString() {
     return new String(coordinates, 0, coordinates.length);
   }

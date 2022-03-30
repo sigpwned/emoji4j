@@ -8,7 +8,9 @@ import com.sigpwned.emoji4j.core.org.json.JSONObject;
 import com.sigpwned.emoji4j.core.org.json.JSONTokener;
 import com.sigpwned.emoji4j.core.trie.DefaultGraphemeTrie;
 
-public class Graphemes {
+public final class Graphemes {
+  private Graphemes() {}
+
   public static GraphemeData getGraphemeData() {
     JSONObject o;
     try (InputStream in =
