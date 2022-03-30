@@ -15,7 +15,7 @@ public abstract class GraphemeMatcherTest {
    * Run a simple test with one canned emoji
    */
   @Test
-  public void basicTest() {
+  public void replaceAllTest() {
     GraphemeMatcher m = newGraphemeMatcher("hello 🙂 world");
 
     assertThat(m.find(), is(true));
@@ -23,6 +23,53 @@ public abstract class GraphemeMatcherTest {
     assertThat(m.grapheme().getName(), is("slightly smiling face"));
 
     assertThat(m.replaceAll(r -> "EMOJI"), is("hello EMOJI world"));
+  }
+  
+  /**
+   * Run a simple test with one canned emoji
+   */
+  @Test
+  public void replaceOneTest() {
+    GraphemeMatcher m = newGraphemeMatcher("alpha 🙂 bravo 🙂 charlie");
+
+    assertThat(m.replaceFirst(r -> "EMOJI"), is("alpha EMOJI bravo 🙂 charlie"));
+  }
+
+  /**
+   * Make sure we find the emoji
+   */
+  @Test
+  public void findTest() {
+    GraphemeMatcher m = newGraphemeMatcher("hello 🙂 world");
+
+    assertThat(m.find(), is(true));
+    assertThat(m.start(), is(6));
+    assertThat(m.grapheme().getName(), is("slightly smiling face"));
+  }
+
+  /**
+   * We should not match if the whole string is not an emoji
+   */
+  @Test
+  public void matchesNegativeTest() {
+    GraphemeMatcher m = newGraphemeMatcher("hello 🙂 world");
+
+    assertThat(m.matches(), is(false));
+  }
+
+  /**
+   * We should match if the whole string is not an emoji
+   */
+  @Test
+  public void matchesPositiveTest() {
+    String s = "🙂";
+
+    GraphemeMatcher m = newGraphemeMatcher(s);
+
+    assertThat(m.matches(), is(true));
+    assertThat(m.start(), is(0));
+    assertThat(m.end(), is(s.length()));
+    assertThat(m.grapheme().getName(), is("slightly smiling face"));
   }
 
   /**
