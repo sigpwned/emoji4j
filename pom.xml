@@ -3,7 +3,7 @@
 
     <groupId>com.sigpwned</groupId>
     <artifactId>emoji4j</artifactId>
-    <version>14.0.0</version>
+    <version>14.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>emoji4j</name>
     <description>emoji4j is an Emoji processing library for Java</description>
@@ -13,7 +13,7 @@
         <connection>scm:git:ssh://git@github.com/sigpwned/emoji4j.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/sigpwned/emoji4j.git</developerConnection>
         <url>https://github.com/sigpwned/emoji4j/tree/main</url>
-        <tag>v14.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <licenses>
