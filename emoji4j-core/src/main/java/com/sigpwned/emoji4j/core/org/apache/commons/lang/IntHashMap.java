@@ -207,8 +207,7 @@ public class IntHashMap<V> {
    *
    * @param key possible key.
    * @return <code>true</code> if and only if the specified object is a key in this hashtable, as
-   *         determined by the <tt>equals</tt> method; <code>false</code> otherwise.
-   * @see #contains(Object)
+   *         determined by the equals method; <code>false</code> otherwise.
    */
   public boolean containsKey(int key) {
     Entry<V> tab[] = table;
