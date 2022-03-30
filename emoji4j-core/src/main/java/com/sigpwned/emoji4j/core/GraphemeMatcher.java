@@ -88,7 +88,7 @@ public class GraphemeMatcher implements GraphemeMatchResult {
   }
 
   public boolean matches() {
-    if (find() == false)
+    if (!find())
       return false;
     if (start() == 0 && end() == length)
       return true;
@@ -119,16 +119,16 @@ public class GraphemeMatcher implements GraphemeMatchResult {
 
     StringBuilder result = new StringBuilder();
 
-    int index = 0;
+    int position = 0;
     while (find()) {
-      result.append(text().substring(index, start()));
+      result.append(text().substring(position, start()));
       result.append(replacer.apply(this));
-      index = end();
+      position = end();
       if (firstOnly)
         break;
     }
 
-    result.append(text().substring(index, length));
+    result.append(text().substring(position, length));
 
     return result.toString();
 
