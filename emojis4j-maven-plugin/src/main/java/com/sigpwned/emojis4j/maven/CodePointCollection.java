@@ -2,6 +2,9 @@ package com.sigpwned.emojis4j.maven;
 
 import java.util.stream.Stream;
 
+/**
+ * A model of multiple unicode code points
+ */
 public abstract class CodePointCollection implements Iterable<CodePoint> {
   public static CodePointCollection fromString(String s) {
     s = s.trim();

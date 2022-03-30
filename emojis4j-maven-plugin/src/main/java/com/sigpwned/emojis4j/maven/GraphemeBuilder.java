@@ -9,14 +9,33 @@ import java.util.Set;
 import java.util.TreeSet;
 import com.google.common.collect.Sets;
 
+/**
+ * A mutable grapheme model
+ */
 public class GraphemeBuilder {
   public static final String EMOJI = "emoji";
 
   public static final String PICTOGRAPHIC = "pictographic";
 
+  /**
+   * The type of this grapheme, either {@link #EMOJI} or {@link #PICTOGRAPHIC}.
+   */
   private String type;
+
+  /**
+   * This grapheme's short name from the Unicode standard
+   */
   private String shortName;
+
+  /**
+   * This grapheme's canonical code point sequence. If an RGI code point sequence exists for this
+   * grapheme, then this is it.
+   */
   private CodePointSequence canonicalCodePointSequence;
+
+  /**
+   * Other code point sequences for this grapheme.
+   */
   private Set<CodePointSequence> alternativeCodePointSequences;
 
   public GraphemeBuilder() {

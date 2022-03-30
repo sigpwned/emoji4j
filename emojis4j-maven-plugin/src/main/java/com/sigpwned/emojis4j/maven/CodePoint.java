@@ -1,5 +1,8 @@
 package com.sigpwned.emojis4j.maven;
 
+/**
+ * A model of a single unicode code point
+ */
 public class CodePoint implements Comparable<CodePoint> {
   public static CodePoint fromString(String s) {
     return of(Integer.parseInt(s, 16));

@@ -3,6 +3,9 @@ package com.sigpwned.emoji4j.core;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * A model for a single, visually-distinct image character.
+ */
 public class Grapheme {
   public static enum Type {
     EMOJI, PICTOGRAPHIC;

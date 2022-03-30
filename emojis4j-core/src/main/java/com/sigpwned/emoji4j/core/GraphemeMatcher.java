@@ -1,8 +1,14 @@
 package com.sigpwned.emoji4j.core;
 
 import java.util.function.Function;
+import java.util.regex.Matcher;
 import com.sigpwned.emoji4j.core.util.Graphemes;
 
+/**
+ * The primary class used to process emoji.
+ * 
+ * @see Matcher
+ */
 public class GraphemeMatcher implements GraphemeMatchResult {
   private final GraphemeTrie trie;
   private final String text;

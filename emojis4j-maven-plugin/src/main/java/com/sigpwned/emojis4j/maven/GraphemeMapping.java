@@ -2,6 +2,9 @@ package com.sigpwned.emojis4j.maven;
 
 import java.util.Objects;
 
+/**
+ * An immutable mapping of one code point sequence to one grapheme
+ */
 public class GraphemeMapping {
   public static GraphemeMapping of(CodePointSequence codePoints, GraphemeBuilder grapheme) {
     return new GraphemeMapping(codePoints, grapheme);

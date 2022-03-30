@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Closed interval, [from, to]
+ * A model of a closed range of Unicode code points, [from, to]
  */
 public class CodePointRange extends CodePointCollection
     implements Comparable<CodePointRange>, Iterable<CodePoint> {

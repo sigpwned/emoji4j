@@ -27,6 +27,9 @@ import org.apache.maven.project.MavenProject;
 import org.json.JSONWriter;
 import com.sigpwned.emojis4j.maven.unicode.ModernUnicodeStandard;
 
+/**
+ * Generates the graphemes.json file used by emoji4j-core
+ */
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class GenerateMojo extends AbstractMojo {
   // Current maven project

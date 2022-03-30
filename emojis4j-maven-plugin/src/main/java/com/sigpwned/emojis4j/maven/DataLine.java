@@ -6,6 +6,9 @@ import static java.util.stream.Collectors.toList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * A single line read from a file in the Unicode standard
+ */
 public class DataLine {
   public static final DataLine BLANK = new DataLine(emptyList());
 

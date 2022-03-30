@@ -2,6 +2,9 @@ package com.sigpwned.emojis4j.maven;
 
 import java.io.IOException;
 
+/**
+ * An emoji-centric model of the data in a modern Unicode standard
+ */
 public interface UnicodeStandard {
   public UnicodeVersion getVersion();
 

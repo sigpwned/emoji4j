@@ -2,6 +2,9 @@ package com.sigpwned.emojis4j.maven;
 
 import java.util.Objects;
 
+/**
+ * A Unicode model semver
+ */
 public class UnicodeVersion implements Comparable<UnicodeVersion> {
   public static UnicodeVersion fromString(String s) {
     if (s == null)

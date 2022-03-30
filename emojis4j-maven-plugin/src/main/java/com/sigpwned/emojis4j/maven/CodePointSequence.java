@@ -14,6 +14,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * A model of an ordered sequence of Unicode code points
+ */
 public class CodePointSequence extends CodePointCollection
     implements Comparable<CodePointSequence> {
   private static final Pattern SPACE = Pattern.compile(" ");
@@ -79,7 +82,7 @@ public class CodePointSequence extends CodePointCollection
   public int size() {
     return getElements().size();
   }
-  
+
   public boolean isQualified() {
     return !unqualified().equals(this);
   }
@@ -155,9 +158,9 @@ public class CodePointSequence extends CodePointCollection
       if (comparison != 0)
         return comparison;
     }
-    if(itera.hasNext() && !iterb.hasNext())
+    if (itera.hasNext() && !iterb.hasNext())
       return -1;
-    if(!itera.hasNext() && iterb.hasNext())
+    if (!itera.hasNext() && iterb.hasNext())
       return +1;
     return 0;
   }

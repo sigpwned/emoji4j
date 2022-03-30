@@ -16,6 +16,9 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import com.google.common.collect.Streams;
 
+/**
+ * An immutable mapping of code point sequences to graphemes
+ */
 public class GraphemeCollection implements Iterable<GraphemeMapping> {
   public static GraphemeCollection of(Map<CodePointSequence, GraphemeBuilder> elements) {
     return new GraphemeCollection(elements);
