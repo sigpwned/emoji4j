@@ -14,12 +14,6 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.3.0</version>
@@ -44,7 +38,7 @@
     </build>
 
     <properties>
-        <jmh.version>1.35</jmh.version>
+      <jmh.version>1.35</jmh.version>
     </properties>
 
     <dependencies>
