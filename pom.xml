@@ -2,17 +2,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sigpwned</groupId>
-    <artifactId>emojis4j</artifactId>
+    <artifactId>emoji4j</artifactId>
     <version>0.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>emojis4j</name>
-    <description>emojis4j is an Emoji processing library for Java</description>
-    <url>https://github.com/sigpwned/emojis4j</url>
+    <name>emoji4j</name>
+    <description>emoji4j is an Emoji processing library for Java</description>
+    <url>https://github.com/sigpwned/emoji4j</url>
 
     <scm>
-        <connection>scm:git:ssh://git@github.com/sigpwned/emojis4j.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/sigpwned/emojis4j.git</developerConnection>
-        <url>https://github.com/sigpwned/emojis4j/tree/main</url>
+        <connection>scm:git:ssh://git@github.com/sigpwned/emoji4j.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/sigpwned/emoji4j.git</developerConnection>
+        <url>https://github.com/sigpwned/emoji4j/tree/main</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -45,7 +45,7 @@
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/sigpwned/emojis4j</url>
+        <url>https://github.com/sigpwned/emoji4j</url>
     </issueManagement>
 
     <properties>
@@ -54,7 +54,7 @@
 
         <sonar.organization>sigpwned</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.exclusions>src/main/java/com/sigpwned/emojis4j/model/**</sonar.exclusions>
+        <sonar.exclusions>src/main/java/com/sigpwned/emoji4j/model/**</sonar.exclusions>
 
         <slf4j.version>1.7.36</slf4j.version>
         <junit.version>4.13.2</junit.version>
@@ -89,9 +89,9 @@
     </dependencyManagement>
 
     <modules>
-        <module>emojis4j-core</module>
-        <module>emojis4j-benchmarks</module>
-        <module>emojis4j-maven-plugin</module>
+        <module>emoji4j-core</module>
+        <module>emoji4j-benchmarks</module>
+        <module>emoji4j-maven-plugin</module>
     </modules>
 
     <!-- For releasing to maven central -->
