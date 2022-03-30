@@ -1,6 +1,7 @@
 package com.sigpwned.emoji4j.maven;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -81,6 +82,8 @@ public class CodePointRange extends CodePointCollection
 
       @Override
       public CodePoint next() {
+        if (!hasNext())
+          throw new NoSuchElementException();
         CodePoint result = cp;
         cp = cp.next();
         return result;
