@@ -20,8 +20,8 @@
                 <executions>
                     <!-- Compile all code  except module-info.java with the configured source level -->
                     <execution>
-                        <id>default-generate-sources</id>
-                        <phase>generate-sources</phase>
+                        <id>default-generate-resources</id>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
