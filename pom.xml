@@ -6,8 +6,14 @@
     <version>14.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>emoji4j</name>
+    <inceptionYear>2022</inceptionYear>
     <description>emoji4j is an Emoji processing library for Java</description>
     <url>https://github.com/sigpwned/emoji4j</url>
+
+    <organization>
+        <name>Andy Boothe</name>
+        <url>https://www.sigpwned.com/</url>
+    </organization>
 
     <scm>
         <connection>scm:git:ssh://git@github.com/sigpwned/emoji4j.git</connection>
@@ -67,6 +73,39 @@
         <junit.version>4.13.2</junit.version>
         <guava.version>31.1-jre</guava.version>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <configuration>
+                    <verbose>false</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>update-file-header</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                            <processStartTag>=================================LICENSE_START==================================</processStartTag>
+                            <processEndTag>==================================LICENSE_END===================================</processEndTag>
+                            <sectionDelimiter>====================================SECTION=====================================</sectionDelimiter>
+                            <licenseName>apache_v2</licenseName>
+                            <roots>
+                                <root>src/main/java</root>
+                                <root>src/test/java</root>
+                            </roots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencyManagement>
         <dependencies>
