@@ -1,8 +1,8 @@
 package com.sigpwned.emoji4j.core.trie;
 
 import com.sigpwned.emoji4j.core.Grapheme;
+import com.sigpwned.emoji4j.core.GraphemeData;
 import com.sigpwned.emoji4j.core.GraphemeTrie;
-import com.sigpwned.emoji4j.core.data.GraphemeData;
 import com.sigpwned.emoji4j.core.data.GraphemeEntry;
 import com.sigpwned.emoji4j.core.grapheme.Emoji;
 import com.sigpwned.emoji4j.core.grapheme.Pictographic;

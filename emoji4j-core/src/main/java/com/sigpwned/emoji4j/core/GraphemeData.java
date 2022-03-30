@@ -1,8 +1,9 @@
-package com.sigpwned.emoji4j.core.data;
+package com.sigpwned.emoji4j.core;
 
 import static java.util.Collections.unmodifiableList;
 import java.util.List;
 import java.util.Objects;
+import com.sigpwned.emoji4j.core.data.GraphemeEntry;
 
 public class GraphemeData {
   public static GraphemeData of(String unicodeVersion, List<GraphemeEntry> graphemes) {

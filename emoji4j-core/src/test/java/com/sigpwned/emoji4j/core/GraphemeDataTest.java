@@ -3,7 +3,6 @@ package com.sigpwned.emoji4j.core;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
-import com.sigpwned.emoji4j.core.data.GraphemeData;
 import com.sigpwned.emoji4j.core.data.GraphemeEntry;
 import com.sigpwned.emoji4j.core.util.Graphemes;
 

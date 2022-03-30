@@ -2,10 +2,10 @@ package com.sigpwned.emoji4j.core.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import com.sigpwned.emoji4j.core.data.GraphemeData;
+import com.sigpwned.emoji4j.core.GraphemeData;
 import com.sigpwned.emoji4j.core.data.GraphemeEntry;
+import com.sigpwned.emoji4j.core.org.json.JSONArray;
+import com.sigpwned.emoji4j.core.org.json.JSONObject;
 
 public class Serialization {
   public static GraphemeData deserializeGraphemeData(JSONObject o) {

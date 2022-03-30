@@ -3,9 +3,9 @@ package com.sigpwned.emoji4j.core.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import com.sigpwned.emoji4j.core.data.GraphemeData;
+import com.sigpwned.emoji4j.core.GraphemeData;
+import com.sigpwned.emoji4j.core.org.json.JSONObject;
+import com.sigpwned.emoji4j.core.org.json.JSONTokener;
 import com.sigpwned.emoji4j.core.trie.DefaultGraphemeTrie;
 
 public class Graphemes {
