@@ -69,7 +69,7 @@
           **/com/sigpwned/emoji4j/benchmark/**.java
         </sonar.exclusions>
 
-        <slf4j.version>1.7.36</slf4j.version>
+        <slf4j.version>2.0.3</slf4j.version>
         <junit.version>4.13.2</junit.version>
         <guava.version>31.1-jre</guava.version>
     </properties>
