@@ -109,3 +109,7 @@ The benchmark results are as follows:
     NopBenchmark.tweets              thrpt   15  1358.919 ± 268.917  ops/s
 
 According to the benchmarks, emoji4j runs about 2.7x as fast as emoji-java. However, there is still a lot of performance to gain back versus a simple code point scan.
+
+## Cookbook
+
+Solutions to common problems are being collected in the [cookbook](wiki/Cookbook). If you have an addition for the cookbook, then please open an issue!
