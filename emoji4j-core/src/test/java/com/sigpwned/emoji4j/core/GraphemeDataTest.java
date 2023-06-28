@@ -34,13 +34,13 @@ public class GraphemeDataTest {
   public void smokeTest() {
     GraphemeData d = Graphemes.getGraphemeData();
 
-    assertThat(d.getUnicodeVersion(), is("14.0"));
+    assertThat(d.getUnicodeVersion(), is("15.0"));
 
     assertThat(
         d.getGraphemes().stream().filter(g -> g.getType().equals(GraphemeEntry.EMOJI_TYPE)).count(),
-        is(3633L));
+        is(3664L));
 
     assertThat(d.getGraphemes().stream()
-        .filter(g -> g.getType().equals(GraphemeEntry.PICTOGRAPHIC_TYPE)).count(), is(993L));
+        .filter(g -> g.getType().equals(GraphemeEntry.PICTOGRAPHIC_TYPE)).count(), is(1002L));
   }
 }
