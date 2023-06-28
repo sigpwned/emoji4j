@@ -19,6 +19,7 @@
  */
 package com.sigpwned.emoji4j.core;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public abstract class GraphemeMatcherTest {
 
     assertThat(m.replaceAll(r -> "EMOJI"), is("hello EMOJI world"));
   }
-  
+
   /**
    * Run a simple test with one canned emoji
    */
@@ -77,7 +78,7 @@ public abstract class GraphemeMatcherTest {
   }
 
   /**
-   * We should match if the whole string is not an emoji
+   * We should match if the whole string is an emoji
    */
   @Test
   public void matchesPositiveTest() {
@@ -89,6 +90,77 @@ public abstract class GraphemeMatcherTest {
     assertThat(m.start(), is(0));
     assertThat(m.end(), is(s.length()));
     assertThat(m.grapheme().getName(), is("slightly smiling face"));
+  }
+
+  /**
+   * Test for https://github.com/sigpwned/emoji4j/issues/70
+   */
+  @Test
+  public void matchesSkinToneTest() {
+    for (String s : new String[] {"👩", "👩🏼", "👩🏽", "👩🏾", "👩🏿"}) {
+      GraphemeMatcher m = newGraphemeMatcher(s);
+
+      assertThat(m.matches(), is(true));
+      assertThat(m.start(), is(0));
+      assertThat(m.end(), is(s.length()));
+      assertThat(m.grapheme().getName(), containsString("woman"));
+    }
+  }
+
+  /**
+   * Test for https://github.com/sigpwned/emoji4j/issues/70
+   */
+  @Test
+  public void multipleEmojiTest() {
+    String woman1 = "👩";
+    String woman2 = "👩🏼";
+    String woman3 = "👩🏽";
+    String woman4 = "👩🏾";
+    String woman5 = "👩🏿";
+
+    String women = String.join(" ", new String[] {woman1, woman2, woman3, woman4, woman5});
+
+    GraphemeMatcher m = newGraphemeMatcher(women);
+
+    assertThat(m.find(), is(true));
+    assertThat(women.substring(m.start(), m.end()), is(woman1));
+
+    assertThat(m.find(), is(true));
+    assertThat(women.substring(m.start(), m.end()), is(woman2));
+
+    assertThat(m.find(), is(true));
+    assertThat(women.substring(m.start(), m.end()), is(woman3));
+
+    assertThat(m.find(), is(true));
+    assertThat(women.substring(m.start(), m.end()), is(woman4));
+
+    assertThat(m.find(), is(true));
+    assertThat(women.substring(m.start(), m.end()), is(woman5));
+
+    assertThat(m.find(), is(false));
+  }
+
+  @Test
+  public void streamTest() {
+    String woman1 = "👩";
+    String woman2 = "👩🏼";
+    String woman3 = "👩🏽";
+    String woman4 = "👩🏾";
+    String woman5 = "👩🏿";
+
+    String women = String.join(" ", new String[] {woman1, woman2, woman3, woman4, woman5});
+
+    GraphemeMatcher m = newGraphemeMatcher(women);
+
+    assertThat(m.find(), is(true));
+    assertThat(women.substring(m.start(), m.end()), is(woman1));
+
+    assertThat(m.find(), is(true));
+    assertThat(women.substring(m.start(), m.end()), is(woman2));
+
+    List<String> remainingMatches = m.results().map(GraphemeMatchResult::group).toList();
+
+    assertThat(remainingMatches, is(List.of(woman3, woman4, woman5)));
   }
 
   /**
