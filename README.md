@@ -112,4 +112,4 @@ According to the benchmarks, emoji4j runs about 2.7x as fast as emoji-java. Howe
 
 ## Cookbook
 
-Solutions to common problems are being collected in the [cookbook](/sigpwned/emoji4j/wiki/Cookbook). If you have an addition for the cookbook, then please open an issue!
+Solutions to common problems are being collected in the [cookbook](https://github.com/sigpwned/emoji4j/wiki/Cookbook). If you have an addition for the cookbook, then please open an issue!
