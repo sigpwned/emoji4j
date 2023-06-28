@@ -81,6 +81,10 @@ If users care about support only emoji (as opposed to all image graphemes), then
         }
     }    
 
+## Cookbook
+
+Solutions to common problems are being collected in the [cookbook](https://github.com/sigpwned/emoji4j/wiki/Cookbook). If you have a solution or request for the cookbook, then please open an issue!
+
 ## Performance
 
 Performance matters! High performance is an explicitly-stated goal of the emoji4j project.
@@ -109,7 +113,3 @@ The benchmark results are as follows:
     NopBenchmark.tweets              thrpt   15  1358.919 ± 268.917  ops/s
 
 According to the benchmarks, emoji4j runs about 2.7x as fast as emoji-java. However, there is still a lot of performance to gain back versus a simple code point scan.
-
-## Cookbook
-
-Solutions to common problems are being collected in the [cookbook](https://github.com/sigpwned/emoji4j/wiki/Cookbook). If you have an addition for the cookbook, then please open an issue!
