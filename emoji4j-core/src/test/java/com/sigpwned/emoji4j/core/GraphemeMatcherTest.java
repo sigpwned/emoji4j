@@ -19,6 +19,7 @@
  */
 package com.sigpwned.emoji4j.core;
 
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -158,7 +159,7 @@ public abstract class GraphemeMatcherTest {
     assertThat(m.find(), is(true));
     assertThat(women.substring(m.start(), m.end()), is(woman2));
 
-    List<String> remainingMatches = m.results().map(GraphemeMatchResult::group).toList();
+    List<String> remainingMatches = m.results().map(GraphemeMatchResult::group).collect(toList());
 
     assertThat(remainingMatches, is(List.of(woman3, woman4, woman5)));
   }
