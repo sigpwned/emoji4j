@@ -1,10 +1,10 @@
 # EMOJI4J [![tests](https://github.com/sigpwned/emoji4j/actions/workflows/tests.yml/badge.svg)](https://github.com/sigpwned/emoji4j/actions/workflows/tests.yml) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=sigpwned_emoji4j&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=sigpwned_emoji4j) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=sigpwned_emoji4j&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=sigpwned_emoji4j) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=sigpwned_emoji4j&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=sigpwned_emoji4j) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.sigpwned/emoji4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.sigpwned/emoji4j-core)
 
-Emoji4j is a high-performance, standards-compliant emoji processor for Java 8 or later.
+Emoji4j is a high-performance, standards-compliant emoji processor supporting Unicode 15 for Java 8 or later.
 
 ## Goals
 
-* Comply with the Unicode 14.0 standard for emoji and pictographs
+* Comply with the Unicode 15.0 standard for emoji and pictographs
 * Provide library support for the most common emoji processing tasks
 * Go fast
 * Keeps JAR size and dependency footprint small
