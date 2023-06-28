@@ -63,13 +63,13 @@ public class GenerateMojo extends AbstractMojo {
   @Parameter(property = "mojoExecution")
   protected MojoExecution execution;
 
-  @Parameter(property = "emojis4j.unicodeVersion", defaultValue = "14.0")
+  @Parameter(property = "emoji4j.unicodeVersion", defaultValue = "14.0")
   private String unicodeVersion;
 
-  @Parameter(property = "emojis4j.target.directory", defaultValue = "target/generated-resources")
+  @Parameter(property = "emoji4j.target.directory", defaultValue = "target/generated-resources")
   private String outputDirectory;
 
-  @Parameter(property = "emojis4j.target.package", defaultValue = "com.sigpwned.emojis4j")
+  @Parameter(property = "emoji4j.target.package", defaultValue = "com.sigpwned.emojis4j")
   private String outputPackage;
 
   public static final int EMOJI_VARIATION_MARKER = 0xFE0F;
