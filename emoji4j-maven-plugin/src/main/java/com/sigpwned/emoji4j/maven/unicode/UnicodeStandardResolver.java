@@ -1,6 +1,6 @@
 /*-
  * =================================LICENSE_START==================================
- * emoji4j-core
+ * emoji4j-maven-plugin
  * ====================================SECTION=====================================
  * Copyright (C) 2022 Andy Boothe
  * ====================================SECTION=====================================
@@ -17,30 +17,23 @@
  * limitations under the License.
  * ==================================LICENSE_END===================================
  */
-package com.sigpwned.emoji4j.core;
+package com.sigpwned.emoji4j.maven.unicode;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.Test;
-import com.sigpwned.emoji4j.core.data.GraphemeEntry;
-import com.sigpwned.emoji4j.core.util.Graphemes;
+import java.net.URL;
+import com.sigpwned.emoji4j.maven.UnicodeVersion;
 
-public class GraphemeDataTest {
-  /**
-   * Basic test ensuring we have the expected unicode version and grapheme counts. If you change the
-   * unicode version in the build, then you will need to change the unicode version here, too.
-   */
-  @Test
-  public void smokeTest() {
-    GraphemeData d = Graphemes.getGraphemeData();
+public interface UnicodeStandardResolver {
+  public URL getEmojiSequenceUrl();
 
-    assertThat(d.getUnicodeVersion(), is("15.1"));
+  public URL getEmojiZwjSequenceUrl();
 
-    assertThat(
-        d.getGraphemes().stream().filter(g -> g.getType().equals(GraphemeEntry.EMOJI_TYPE)).count(),
-        is(3782L));
+  public URL getEmojiTestUrl();
 
-    assertThat(d.getGraphemes().stream()
-        .filter(g -> g.getType().equals(GraphemeEntry.PICTOGRAPHIC_TYPE)).count(), is(1019L));
-  }
+  public URL getUnicodeDataUrl();
+
+  public URL getEmojiDataUrl();
+
+  public URL getEmojiVariationSequencesUrl();
+
+  public UnicodeVersion getVersion();
 }

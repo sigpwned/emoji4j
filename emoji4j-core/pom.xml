@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.sigpwned</groupId>
         <artifactId>emoji4j</artifactId>
-        <version>15.0.2-SNAPSHOT</version>
+        <version>15.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>emoji4j-core</artifactId>
