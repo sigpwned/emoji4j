@@ -19,10 +19,11 @@
  */
 package com.sigpwned.emoji4j.core;
 
-import static java.util.stream.Collectors.toList;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.containsString;
+import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -161,7 +162,7 @@ public abstract class GraphemeMatcherTest {
 
     List<String> remainingMatches = m.results().map(GraphemeMatchResult::group).collect(toList());
 
-    assertThat(remainingMatches, is(List.of(woman3, woman4, woman5)));
+    assertThat(remainingMatches, is(asList(woman3, woman4, woman5)));
   }
 
   /**
@@ -189,7 +190,32 @@ public abstract class GraphemeMatcherTest {
     while (m.find()) {
       matches.add(m.grapheme().getName());
     }
+  }
 
-    assertThat(matches, is(graphemes));
+  /**
+   * The library should recognized the world map emoji 
+   * 
+   * @see <a href="https://github.com/sigpwned/emoji4j/issues/125">GitHub Issues</a>
+   */
+  @Test
+  public void regressionGitHub125Test() {
+    String text = "🗺️";
+
+    GraphemeMatcher m = newGraphemeMatcher(text);
+
+    assertThat(m.find(), is(true));
+    assertThat(text.substring(m.start(), m.end()), is("🗺️"));
+  }
+
+  /**
+   * emoji4j should support Unicode 15.1
+   */
+  public void unicode151Test() {
+    String text = "🙂‍↔️";
+
+    GraphemeMatcher m = newGraphemeMatcher(text);
+
+    assertThat(m.find(), is(true));
+    assertThat(text.substring(m.start(), m.end()), is("🙂‍↔️"));
   }
 }

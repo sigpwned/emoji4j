@@ -19,11 +19,10 @@
  */
 package com.sigpwned.emoji4j.maven.unicode;
 
+import static java.util.Objects.requireNonNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import com.sigpwned.emoji4j.maven.CodePoint;
@@ -37,33 +36,17 @@ import com.sigpwned.emoji4j.maven.UnicodeVersion;
 /**
  * Works on Unicode versions 13.0, 14.0
  */
-public class ModernUnicodeStandard implements UnicodeStandard {
+public class DefaultUnicodeStandard implements UnicodeStandard {
   public static final UnicodeVersion EARLIEST_MODERN_VERSION = UnicodeVersion.of(13, 0, 0);
 
-  private final UnicodeVersion version;
+  private final UnicodeStandardResolver resolver;
 
-  public ModernUnicodeStandard(UnicodeVersion version) {
-    if (version.compareTo(EARLIEST_MODERN_VERSION) < 0)
-      throw new IllegalArgumentException("earliest modern version is " + EARLIEST_MODERN_VERSION);
-    this.version = version;
-  }
-
-  /* default */ static final URL DEFAULT_BASE_URL;
-  static {
-    try {
-      DEFAULT_BASE_URL = new URL("https://unicode.org/Public/");
-    } catch (MalformedURLException e) {
-      throw new UncheckedIOException("Failed to parse default Unicode URL", e);
-    }
+  public DefaultUnicodeStandard(UnicodeStandardResolver resolver) {
+    this.resolver = requireNonNull(resolver);
   }
 
   /* default */ URL getEmojiSequenceUrl() {
-    try {
-      return new URL(DEFAULT_BASE_URL,
-          String.format("emoji/%s/emoji-sequences.txt", getVersion().toMajorMinorString()));
-    } catch (MalformedURLException e) {
-      throw new UncheckedIOException("Failed to parse emoji sequence URL", e);
-    }
+    return getResolver().getEmojiSequenceUrl();
   }
 
   @Override
@@ -80,12 +63,7 @@ public class ModernUnicodeStandard implements UnicodeStandard {
   }
 
   /* default */ URL getEmojiZwjSequenceUrl() {
-    try {
-      return new URL(DEFAULT_BASE_URL,
-          String.format("emoji/%s/emoji-zwj-sequences.txt", getVersion().toMajorMinorString()));
-    } catch (MalformedURLException e) {
-      throw new UncheckedIOException("Failed to parse emoji ZWJ sequence URL", e);
-    }
+    return getResolver().getEmojiZwjSequenceUrl();
   }
 
   @Override
@@ -102,12 +80,7 @@ public class ModernUnicodeStandard implements UnicodeStandard {
   }
 
   /* default */ URL getEmojiTestUrl() {
-    try {
-      return new URL(DEFAULT_BASE_URL,
-          String.format("emoji/%s/emoji-test.txt", getVersion().toMajorMinorString()));
-    } catch (MalformedURLException e) {
-      throw new UncheckedIOException("Failed to parse emoji test URL", e);
-    }
+    return getResolver().getEmojiTestUrl();
   }
 
   @Override
@@ -123,12 +96,7 @@ public class ModernUnicodeStandard implements UnicodeStandard {
   }
 
   /* default */ URL getUnicodeDataUrl() {
-    try {
-      return new URL(DEFAULT_BASE_URL,
-          String.format("%s/ucd/UnicodeData.txt", getVersion().toMajorMinorPatchString()));
-    } catch (MalformedURLException e) {
-      throw new UncheckedIOException("Failed to parse unicode data sequence URL", e);
-    }
+    return getResolver().getUnicodeDataUrl();
   }
 
   @Override
@@ -144,12 +112,7 @@ public class ModernUnicodeStandard implements UnicodeStandard {
   }
 
   /* default */ URL getEmojiDataUrl() {
-    try {
-      return new URL(DEFAULT_BASE_URL,
-          String.format("%s/ucd/emoji/emoji-data.txt", getVersion().toMajorMinorPatchString()));
-    } catch (MalformedURLException e) {
-      throw new UncheckedIOException("Failed to parse emoji data sequence URL", e);
-    }
+    return getResolver().getEmojiDataUrl();
   }
 
   @Override
@@ -165,12 +128,7 @@ public class ModernUnicodeStandard implements UnicodeStandard {
   }
 
   /* default */ URL getEmojiVariationSequencesUrl() {
-    try {
-      return new URL(DEFAULT_BASE_URL, String.format("%s/ucd/emoji/emoji-variation-sequences.txt",
-          getVersion().toMajorMinorPatchString()));
-    } catch (MalformedURLException e) {
-      throw new UncheckedIOException("Failed to parse emoji data sequence URL", e);
-    }
+    return getResolver().getEmojiVariationSequencesUrl();
   }
 
   @Override
@@ -189,6 +147,10 @@ public class ModernUnicodeStandard implements UnicodeStandard {
 
   @Override
   public UnicodeVersion getVersion() {
-    return version;
+    return getResolver().getVersion();
+  }
+
+  public UnicodeStandardResolver getResolver() {
+    return resolver;
   }
 }

@@ -22,8 +22,10 @@ package com.sigpwned.emoji4j.maven;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,7 +46,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.json.JSONWriter;
-import com.sigpwned.emoji4j.maven.unicode.ModernUnicodeStandard;
+import com.sigpwned.emoji4j.maven.unicode.CachingUnicodeStandardResolver;
+import com.sigpwned.emoji4j.maven.unicode.DefaultUnicodeStandard;
+import com.sigpwned.emoji4j.maven.unicode.ModernUnicodeStandardResolver;
 
 /**
  * Generates the graphemes.json file used by emoji4j-core
@@ -69,6 +73,9 @@ public class GenerateMojo extends AbstractMojo {
   @Parameter(property = "emoji4j.target.directory", defaultValue = "target/generated-resources")
   private String outputDirectory;
 
+  @Parameter(property = "emoji4j.cache.directory", defaultValue = "target/cache/emoji4j")
+  private String cacheDirectory;
+
   @Parameter(property = "emoji4j.target.package", defaultValue = "com.sigpwned.emojis4j")
   private String outputPackage;
 
@@ -78,15 +85,22 @@ public class GenerateMojo extends AbstractMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    UnicodeStandard unicode = new ModernUnicodeStandard(UnicodeVersion.fromString(unicodeVersion));
     try {
       File outputDirectory =
           new File(session.getCurrentProject().getBasedir(), this.outputDirectory);
 
       outputDirectory.mkdirs();
 
+      File cacheDirectory = new File(session.getCurrentProject().getBasedir(), this.cacheDirectory);
+
+      cacheDirectory.mkdirs();
+
       Resource resourceDirectory = new Resource();
       resourceDirectory.setDirectory(outputDirectory.getAbsolutePath());
+
+      UnicodeStandard unicode =
+          new DefaultUnicodeStandard(new CachingUnicodeStandardResolver(cacheDirectory,
+              new ModernUnicodeStandardResolver(UnicodeVersion.fromString(unicodeVersion))));
 
       session.getCurrentProject().addResource(resourceDirectory);
 
@@ -100,8 +114,9 @@ public class GenerateMojo extends AbstractMojo {
       // List<GraphemeBuilder> graphemes =
       // sequences.stream().map(m -> m.getGrapheme()).collect(toList());
 
-      try (FileWriter fw =
-          new FileWriter(new File(outputDirectory, "graphemes.json"), StandardCharsets.UTF_8)) {
+      try (Writer fw =
+          new OutputStreamWriter(new FileOutputStream(new File(outputDirectory, "graphemes.json")),
+              StandardCharsets.UTF_8)) {
         JSONWriter w = new JSONWriter(fw);
         w.object().key("unicodeVersion").value(unicodeVersion).key("graphemes").array();
         for (GraphemeBuilder grapheme : graphemes) {
