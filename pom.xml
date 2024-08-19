@@ -71,7 +71,7 @@
           **/com/sigpwned/emoji4j/benchmark/**.java
         </sonar.exclusions>
 
-        <slf4j.version>2.0.10</slf4j.version>
+        <slf4j.version>2.0.16</slf4j.version>
         <junit.version>4.13.2</junit.version>
         <guava.version>33.0.0-jre</guava.version>
     </properties>
@@ -81,7 +81,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>2.3.0</version>
+                <version>2.4.0</version>
                 <configuration>
                     <verbose>false</verbose>
                 </configuration>
