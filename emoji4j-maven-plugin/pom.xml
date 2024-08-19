@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.sigpwned</groupId>
         <artifactId>emoji4j</artifactId>
-        <version>15.1.1-SNAPSHOT</version>
+        <version>15.1.1</version>
     </parent>
 
     <artifactId>emoji4j-maven-plugin</artifactId>
