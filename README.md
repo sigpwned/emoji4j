@@ -1,10 +1,10 @@
 # EMOJI4J [![tests](https://github.com/sigpwned/emoji4j/actions/workflows/tests.yml/badge.svg)](https://github.com/sigpwned/emoji4j/actions/workflows/tests.yml)  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.sigpwned/emoji4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.sigpwned/emoji4j-core)
 
-Emoji4j is a high-performance, standards-compliant emoji processor supporting Unicode 15 for Java 8 or later.
+Emoji4j is a high-performance, standards-compliant emoji processor supporting Unicode 15.1 for Java 8 or later.
 
 ## Goals
 
-* Comply with the Unicode 15.0 standard for emoji and pictographs
+* Comply with the Unicode 15.1 standard for emoji and pictographs
 * Provide library support for the most common emoji processing tasks
 * Go fast
 * Keeps JAR size and dependency footprint small
@@ -57,7 +57,7 @@ Not all emoji have a corresponding pictograph. Not all pictograph have a corresp
 
 ## The Current State of Emoji
 
-The [latest Unicode version](https://unicode.org/Public/14.0.0/) defines [3,633 official emoji](https://blog.emojipedia.org/whats-new-in-unicode-14-0/), plus several hundred additional pictographs. The emoji4j library supports all of these graphemes.
+The [latest Unicode version](https://unicode.org/Public/15.1.0/) defines [3,782 official emoji](https://blog.emojipedia.org/whats-new-in-unicode-15-1-and-emoji-15-1/), plus several hundred additional pictographs. The emoji4j library supports all of these graphemes.
 
 ## Code Examples
 
