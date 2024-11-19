@@ -3,7 +3,7 @@
 
     <groupId>com.sigpwned</groupId>
     <artifactId>emoji4j</artifactId>
-    <version>16.0.0</version>
+    <version>16.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>emoji4j</name>
     <inceptionYear>2022</inceptionYear>
@@ -19,7 +19,7 @@
         <connection>scm:git:ssh://git@github.com/sigpwned/emoji4j.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/sigpwned/emoji4j.git</developerConnection>
         <url>https://github.com/sigpwned/emoji4j/tree/main</url>
-        <tag>v16.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <licenses>
